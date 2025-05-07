@@ -35,23 +35,8 @@ function enrollNewUser() {
             }
         };
     
-        fetch('https://rottentomato1.p.rapidapi.com/movie?title=the%20batman', options)
+        fetch('https://netflix54.p.rapidapi.com/season/episodes/?ids=80077209%2C80117715&offset=0&limit=25&lang=en', options)
             .then(response => response.json())
-            .then(data => {
-                // Puedes personalizar esta parte según los datos disponibles en la respuesta
-                const movie = data;
-                document.getElementById("contenido").innerHTML = `
-                    <h2>🎬 Película:</h2>
-                    <p><strong>Título:</strong> ${movie?.title || "No disponible"}</p>
-                    <p><strong>Año:</strong> ${movie?.year || "No disponible"}</p>
-                    <p><strong>Género:</strong> ${movie?.genre || "No disponible"}</p>
-                    <p><strong>Sinopsis:</strong> ${movie?.synopsis || "No disponible"}</p>
-                `;
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById("contenido").innerHTML = `<p>❌ Error al obtener datos de la película</p>`;
-            });
     }
 
     function handleError(errCode) {
