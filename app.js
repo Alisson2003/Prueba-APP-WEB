@@ -6,51 +6,54 @@ function enrollNewUser() {
         userConsent: false,
         payload: { whoami: 123456, email: "alisson.viracocha@epn.edu.ec" }
     }).then(userInfo => {
-        alert(`✅ Usuario registrado:\nID Facial: ${userInfo.facialId}\nFecha Registro: ${userInfo.timestamp}\nGénero: ${userInfo.details.gender}\nEdad aprox: ${userInfo.details.age}`);
+        alert(`Usuario registrado`);
         console.log("Registro completado:", userInfo);
     }).catch(errCode => {
         handleError(errCode);
         faceio.restartSession();
     });
-}
+    }
 
-function authenticateUser() {
+    function authenticateUser() {
     faceio.authenticate({ locale: "auto" })
     .then(userData => {
-        alert(`✅ Autenticación exitosa:\nID Facial: ${userData.facialId}\nPayload Asociado: ${JSON.stringify(userData.payload)}`);
+        alert(` Autenticación exitosa `);
         console.log("Usuario autenticado:", userData);
-        consumirApiPeliculas(); // Consumimos API solo si autentica
+        consumirApiPeliculas();
     }).catch(errCode => {
         handleError(errCode);
         faceio.restartSession();
     });
-}
+    }
 
-function consumirApiPeliculas() {
-    const options = {
-        method: 'GET',
-        headers: {
-            'X-RapidAPI-Key': 'f3cde74ed7msh818635633fa6d28p14abc1jsnd581b2de48ba',
-            'X-RapidAPI-Host': 'netflix54.p.rapidapi.com'
+    function consumirApiPeliculas() {
+        {
+            const url = 'https://netflix54.p.rapidapi.com/season/episodes/?ids=80077209%2C80117715&offset=0&limit=25&lang=en';
+            const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': 'f3cde74ed7msh818635633fa6d28p14abc1jsnd581b2de48ba',
+                    'X-RapidAPI-Host': 'netflix54.p.rapidapi.com'
+                }
+            };
+        
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("✅ Episodios obtenidos:");
+                    console.log(data);
+                    alert("✅ Episodios cargados. Revisa la consola (F12)");
+                })
+                .catch(error => {
+                    console.error("❌ Error al consumir la API:", error);
+                    alert("❌ Error al consumir la API");
+                });
         }
-    };
+        
+    }
 
-    fetch('https://netflix54.p.rapidapi.com/search/?query=action&offset=0&limit_titles=10&limit_suggestions=0&lang=en', options)
-        .then(response => response.json())
-        .then(data => {
-            console.log("🎬 Películas encontradas:");
-            data.titles.forEach(pelicula => {
-                console.log(`- ${pelicula.jawSummary.title}`);
-            });
-        })
-        .catch(err => {
-            console.error("Error al consumir la API de películas:", err);
-        });
-}
-
-// Arreglo del manejo de errores
-function handleError(errCode) {
-    const fioErr = faceio.error; // Esta es la forma correcta
+    function handleError(errCode) {
+    const fioErr = fioErrCode;
     let msg = "";
     switch (errCode) {
         case fioErr.PERMISSION_REFUSED: msg = "❌ Acceso a la cámara denegado"; break;
@@ -78,4 +81,4 @@ function handleError(errCode) {
     }
     alert(msg);
     console.error("Error:", msg, "| Código:", errCode);
-}
+    }
