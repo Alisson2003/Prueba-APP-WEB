@@ -12,37 +12,45 @@ function enrollNewUser() {
         handleError(errCode);
         faceio.restartSession();
     });
-    }
+}
 
-    function authenticateUser() {
+function authenticateUser() {
     faceio.authenticate({ locale: "auto" })
     .then(userData => {
         alert(`✅ Autenticación exitosa:\nID Facial: ${userData.facialId}\nPayload Asociado: ${JSON.stringify(userData.payload)}`);
         console.log("Usuario autenticado:", userData);
-        consumirApiPeliculas();
+        consumirApiPeliculas(); // Consumimos API solo si autentica
     }).catch(errCode => {
         handleError(errCode);
         faceio.restartSession();
     });
-    }
+}
 
-    function consumirApiPeliculas() {
-        const options = {
-            method: 'GET',
-            headers: {
-                'X-RapidAPI-Key': 'f3cde74ed7msh818635633fa6d28p14abc1jsnd581b2de48ba',
-                'X-RapidAPI-Host': 'netflix54.p.rapidapi.com'
-                }
-            };
-            
-            fetch('https://netflix54.p.rapidapi.com/search/?query=action&offset=0&limit_titles=50&limit_suggestions=20&lang=en', options)
-                .then(response => response.json())
-                .then(response => console.log(response))
-                .catch(err => console.error(err));
-    }     
+function consumirApiPeliculas() {
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': 'f3cde74ed7msh818635633fa6d28p14abc1jsnd581b2de48ba',
+            'X-RapidAPI-Host': 'netflix54.p.rapidapi.com'
+        }
+    };
 
-    function handleError(errCode) {
-    const fioErr = fioErrCode;
+    fetch('https://netflix54.p.rapidapi.com/search/?query=action&offset=0&limit_titles=10&limit_suggestions=0&lang=en', options)
+        .then(response => response.json())
+        .then(data => {
+            console.log("🎬 Películas encontradas:");
+            data.titles.forEach(pelicula => {
+                console.log(`- ${pelicula.jawSummary.title}`);
+            });
+        })
+        .catch(err => {
+            console.error("Error al consumir la API de películas:", err);
+        });
+}
+
+// Arreglo del manejo de errores
+function handleError(errCode) {
+    const fioErr = faceio.error; // Esta es la forma correcta
     let msg = "";
     switch (errCode) {
         case fioErr.PERMISSION_REFUSED: msg = "❌ Acceso a la cámara denegado"; break;
@@ -70,4 +78,4 @@ function enrollNewUser() {
     }
     alert(msg);
     console.error("Error:", msg, "| Código:", errCode);
-    }
+}
