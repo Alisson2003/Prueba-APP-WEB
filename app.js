@@ -40,9 +40,9 @@ function enrollNewUser() {
             fetch(url, options)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("✅ Episodios obtenidos:");
+                    console.log(" Episodios obtenidos:");
                     console.log(data);
-                    alert("✅ Episodios cargados. Revisa la consola (F12)");
+                    alert(" Episodios cargados. Revisa la consola (F12)");
                 })
                 .catch(error => {
                     console.error("❌ Error al consumir la API:", error);
