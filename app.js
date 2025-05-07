@@ -37,6 +37,16 @@ function enrollNewUser() {
     
         fetch('https://netflix54.p.rapidapi.com/season/episodes/?ids=80077209%2C80117715&offset=0&limit=25&lang=en', options)
             .then(response => response.json())
+            .then(data => {
+                // Puedes personalizar esta parte según los datos disponibles en la respuesta
+                const movie = data;
+                document.getElementById("contenido").innerHTML = `
+                `;
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById("contenido").innerHTML = `<p>❌ Error al obtener datos</p>`;
+            });
     }
 
     function handleError(errCode) {
