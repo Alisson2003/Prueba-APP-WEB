@@ -27,33 +27,31 @@ function enrollNewUser() {
     }
 
     function consumirApiPeliculas() {
-    const options = {
-        method: 'GET',
-        headers: {
-        'X-RapidAPI-Key': 'f3cde74ed7msh818635633fa6d28p14abc1jsnd581b2de48ba',
-        'X-RapidAPI-Host': 'streaming-availability.p.rapidapi.com'
-        }
-    };
-
-    fetch('https://streaming-availability.p.rapidapi.com/search/ultra?country=us&service=netflix&type=movie&output_language=en&language=en', options)
-        .then(response => response.json())
-        .then(data => {
-        if (data.results && data.results.length > 0) {
-            const movie = data.results[0];
-            document.getElementById("contenido").innerHTML = `
-            <h2>🎬 Película Recomendada:</h2>
-            <p><strong>${movie.title}</strong> (${movie.year})</p>
-            <img src="${movie.posterUrls[0]}" alt="Poster" style="border-radius:12px; margin-top:10px; max-width:200px;"><br><br>
-            <p>${movie.overview}</p>
-            `;
-        } else {
-            document.getElementById("contenido").innerHTML = `<p>❌ No se encontraron películas</p>`;
-        }
-        })
-        .catch(err => {
-        console.error(err);
-        document.getElementById("contenido").innerHTML = `<p>❌ Error al consumir API de películas</p>`;
-        });
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': 'f3cde74ed7msh818635633fa6d28p14abc1jsnd581b2de48ba',
+                'X-RapidAPI-Host': 'rottentomato1.p.rapidapi.com'
+            }
+        };
+    
+        fetch('https://rottentomato1.p.rapidapi.com/movie?title=the%20batman', options)
+            .then(response => response.json())
+            .then(data => {
+                // Puedes personalizar esta parte según los datos disponibles en la respuesta
+                const movie = data;
+                document.getElementById("contenido").innerHTML = `
+                    <h2>🎬 Película:</h2>
+                    <p><strong>Título:</strong> ${movie?.title || "No disponible"}</p>
+                    <p><strong>Año:</strong> ${movie?.year || "No disponible"}</p>
+                    <p><strong>Género:</strong> ${movie?.genre || "No disponible"}</p>
+                    <p><strong>Sinopsis:</strong> ${movie?.synopsis || "No disponible"}</p>
+                `;
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById("contenido").innerHTML = `<p>❌ Error al obtener datos de la película</p>`;
+            });
     }
 
     function handleError(errCode) {
